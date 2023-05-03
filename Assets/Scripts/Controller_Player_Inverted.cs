@@ -5,6 +5,7 @@ using UnityEngine;
 public class Controller_Player_Inverted : Controller_Player
 {
     private Vector3 surfaceNormal = Vector3.up;
+    private Vector3 lastSurfaceNormal = Vector3.up;
 
     public override void FixedUpdate()
     {
@@ -16,8 +17,14 @@ public class Controller_Player_Inverted : Controller_Player
             // Align the player's rotation to the surface normal
             transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
 
-            // Snap the player to the surface
-            transform.position = hit.normal + hit.point * 0.5f;
+            // Snap the player to the surface if it's a new surface
+            surfaceNormal = hit.normal;
+            if (surfaceNormal != lastSurfaceNormal)
+            {
+                transform.position = hit.point + surfaceNormal * 0.5f;
+            }
+
+            lastSurfaceNormal = surfaceNormal;
         }
     }
 
@@ -45,6 +52,8 @@ public class Controller_Player_Inverted : Controller_Player
             }
         }
     }
+}
+
 
     /*El siguiente codigo permite que el personaje verde rompa las leyes de la gravedad y se adhiera a cualquier superficie que toque*/
     /*
@@ -78,4 +87,4 @@ public class Controller_Player_Inverted : Controller_Player
     }
     
      */
-}
+
