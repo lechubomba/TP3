@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    
     public float speed = 2f;
     public float distance = 4f;
+    public float pushForce = 5f; 
     private Rigidbody rb;
     private float startingX;
     private bool movingRight = true;
@@ -18,7 +20,7 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Move the enemy left and right
+       
         if (movingRight)
         {
             rb.velocity = new Vector3(speed, rb.velocity.y, 0f);
@@ -34,6 +36,19 @@ public class EnemyController : MonoBehaviour
             {
                 movingRight = true;
             }
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+       
+        if (collision.gameObject.tag == "Player")
+        {
+            Vector3 pushDirection = collision.gameObject.transform.position - transform.position;
+            pushDirection = pushDirection.normalized;
+
+            
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(pushDirection * pushForce, ForceMode.Impulse);
         }
     }
 }
